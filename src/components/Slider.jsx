@@ -14,6 +14,7 @@ const Container = styled.div`
 const Wrapper = styled.div`
     height: 100%;
     display: flex;
+    transition: all 1.5s ease;
     transform: translateX(${({slideIndex}) => slideIndex * -100}vw)`
 
 const Arrow = styled.div`
