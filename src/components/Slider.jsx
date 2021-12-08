@@ -1,6 +1,8 @@
 import * as React from 'react';
+import {useState} from 'react';
 import styled from "styled-components";
-import {ArrowLeft, ArrowLeftOutlined, ArrowRightOutlined} from "@material-ui/icons";
+import {ArrowLeftOutlined, ArrowRightOutlined} from "@material-ui/icons";
+import {sliderItems} from "../data"
 
 const Container = styled.div`
     width:100%;
@@ -11,7 +13,8 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
     height: 100%;
-    display: flex;`
+    display: flex;
+    transform: translateX(${({slideIndex}) => slideIndex * -100}vw)`
 
 const Arrow = styled.div`
     width: 50px;
@@ -28,8 +31,8 @@ const Arrow = styled.div`
     bottom: 0;
     margin: auto;
     cursor: pointer;
-    opacity: 0.5;;
-    `
+    opacity: 0.5;
+    z-index: 2;`
 
 const Slide = styled.div`
     width: 100vw;
@@ -62,44 +65,35 @@ const Button = styled.button`
     cursor: pointer;`
 
 const Slider = () => {
+    const [slideIndex, ssetSlideIndex] = useState(0);
+    const handleClick = (direction) => {
+        if (direction === 'left') {
+            ssetSlideIndex(slideIndex > 0 ? slideIndex - 1 : 2)
+        } else {
+            ssetSlideIndex(slideIndex < 2 ? slideIndex + 1 : 0)
+        }
+    }
+
     return (
         <Container>
-            <Arrow direction='left'>
+            <Arrow direction='left' onClick={() => handleClick("left")}>
                 <ArrowLeftOutlined/>
             </Arrow>
-            <Wrapper>
-                <Slide bg="f5fafd">
-                    <ImageContainer>
-                        <Image src="https://images.unsplash.com/photo-1602143407151-7111542de6e8"/>
-                    </ImageContainer>
-                    <InfoContainer>
-                        <Title>THE BOTTLE_</Title>
-                        <Description>Shop it! A, sh, shop! Shop it real good!</Description>
-                        <Button>SHOW NOW</Button>
-                    </InfoContainer>
-                </Slide>
-                <Slide bg="fcf1ed">
-                    <ImageContainer>
-                        <Image src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77"/>
-                    </ImageContainer>
-                    <InfoContainer>
-                        <Title>Shoo! Shoo! Shoes!</Title>
-                        <Description>Shop it! A, sh, shop! Shop it real good!</Description>
-                        <Button>SHOW NOW</Button>
-                    </InfoContainer>
-                </Slide>
-                <Slide bg="fbf0f4">
-                    <ImageContainer>
-                        <Image src="https://images.unsplash.com/photo-1546868871-7041f2a55e12"/>
-                    </ImageContainer>
-                    <InfoContainer>
-                        <Title>WHAAAATCH!!!</Title>
-                        <Description>Shop it! A, sh, shop! Shop it real good!</Description>
-                        <Button>SHOW NOW</Button>
-                    </InfoContainer>
-                </Slide>
+            <Wrapper slideIndex={slideIndex}>
+                {sliderItems.map((item) => (
+                    <Slide bg={item.bg}>
+                        <ImageContainer>
+                            <Image src={item.img}/>
+                        </ImageContainer>
+                        <InfoContainer>
+                            <Title>{item.title}</Title>
+                            <Description>{item.desc}</Description>
+                            <Button>SHOW NOW</Button>
+                        </InfoContainer>
+                    </Slide>
+                ))}
             </Wrapper>
-            <Arrow direction='right'>
+            <Arrow direction='right' onClick={() => handleClick("right")}>
                 <ArrowRightOutlined/>
             </Arrow>
         </Container>
