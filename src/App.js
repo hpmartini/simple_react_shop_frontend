@@ -1,5 +1,5 @@
 import Home from "./pages/Home";
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import {BrowserRouter as Router, Navigate, Route, Routes} from "react-router-dom";
 import ProductList from "./pages/ProductList";
 import Product from "./pages/Product";
 import Cart from "./pages/Cart";
@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 
 const App = () => {
+    const user = true;
     return (
         <Router>
             <Routes>
@@ -29,10 +30,10 @@ const App = () => {
                     <Cart/>
                 }/>
                 <Route path="/login" element={
-                    <Login/>
+                    user ? <Navigate replace to="/"/> : <Login/>
                 }/>
                 <Route path="/register" element={
-                    <Register/>
+                    user ? <Navigate replace to="/"/> : <Register/>
                 }/>
             </Routes>
         </Router>
