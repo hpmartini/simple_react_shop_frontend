@@ -9,7 +9,6 @@ import {Add, Remove} from "@material-ui/icons";
 import {mobile} from "../responsive";
 import {useLocation} from "react-router-dom";
 import {publicRequest} from "../requestMethods";
-import axios from "axios";
 
 const Container = styled.div``;
 
@@ -32,7 +31,7 @@ const Image = styled.img`
 
 const InfoContainer = styled.div`
   flex: 1;
-  padding: 0px 50px;
+  padding: 0 50px;
   ${mobile({padding: "10px"})}
 `;
 
@@ -41,7 +40,7 @@ const Title = styled.h1`
 `;
 
 const Description = styled.p`
-  margin: 20px 0px;
+  margin: 20px 0;
 `;
 
 const Price = styled.span`
@@ -51,7 +50,7 @@ const Price = styled.span`
 
 const FilterContainer = styled.div`
   width: 50%;
-  margin: 30px 0px;
+  margin: 30px 0;
   display: flex;
   justify-content: space-between;
   ${mobile({width: "100%"})}
@@ -111,7 +110,7 @@ const Amount = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0px 5px;
+  margin: 0 5px;
 `;
 
 const Button = styled.button`
@@ -155,6 +154,11 @@ const Product = () => {
         }
     }
 
+    const handleAddToCart = () => {
+        console.log(color);
+        console.log(size);
+    }
+
     return (
         <Container>
             <Announcement/>
@@ -172,7 +176,7 @@ const Product = () => {
                             <FilterTitle>Color</FilterTitle>
                             {product.color?.map((color) => (
                                 <FilterColor
-                                    onClick={setColor(color)}
+                                    onClick={() => setColor(color)}
                                     color={color}
                                     border={getBorder(color)}
                                     key={color}
@@ -194,7 +198,7 @@ const Product = () => {
                             <Amount>{quantity}</Amount>
                             <Add onClick={() => handleQuantity('inc')}/>
                         </AmountContainer>
-                        <Button>ADD TO CART</Button>
+                        <Button onClick={handleAddToCart}>ADD TO CART</Button>
                     </AddContainer>
                 </InfoContainer>
             </Wrapper>
