@@ -9,6 +9,7 @@ import {Add, Remove} from "@material-ui/icons";
 import {mobile} from "../responsive";
 import {useLocation} from "react-router-dom";
 import {publicRequest} from "../requestMethods";
+import axios from "axios";
 
 const Container = styled.div``;
 
@@ -130,6 +131,8 @@ const Product = () => {
     const id = location.pathname.split('/')[2];
     const [product, setProduct] = useState({});
     const [quantity, setQuantity] = useState(1);
+    const [color, setColor] = useState('');
+    const [size, setSize] = useState('');
 
     useEffect(async () => {
         try {
@@ -168,12 +171,17 @@ const Product = () => {
                         <Filter>
                             <FilterTitle>Color</FilterTitle>
                             {product.color?.map((color) => (
-                                <FilterColor color={color} border={getBorder(color)} key={color}/>
+                                <FilterColor
+                                    onClick={setColor(color)}
+                                    color={color}
+                                    border={getBorder(color)}
+                                    key={color}
+                                />
                             ))}
                         </Filter>
                         <Filter>
                             <FilterTitle>Size</FilterTitle>
-                            <FilterSize>
+                            <FilterSize onChange={(event) => setSize(event.target.value)}>
                                 {product.size?.map((size) => (
                                     <FilterSizeOption key={size}>{size}</FilterSizeOption>
                                 ))}
