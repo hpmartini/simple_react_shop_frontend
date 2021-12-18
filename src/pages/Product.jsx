@@ -67,12 +67,18 @@ const FilterTitle = styled.span`
 `;
 
 const FilterColor = styled.div`
-  width: 20px;
-  height: 20px;
+  width: ${({border}) => border === 'none' ? '20px' : '19px'};
+  height: ${({border}) => border === 'none' ? '20px' : '19px'};
+  border: ${({border}) => border};
   border-radius: 50%;
-  background-color: ${(props) => props.color};
-  margin: 0px 5px;
+  background-color: ${({color}) => color};
+  margin: 0 5px;
   cursor: pointer;
+  transition: all 0.75s ease;
+
+  &:hover {
+    border-radius: 35%;
+  }
 `;
 
 const FilterSize = styled.select`
