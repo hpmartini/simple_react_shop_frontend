@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useEffect, useState} from 'react';
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import Announcement from "../components/Announcement";
@@ -6,13 +7,15 @@ import Footer from "../components/Footer";
 import Newsletter from "../components/Newsletter";
 import {Add, Remove} from "@material-ui/icons";
 import {mobile} from "../responsive";
+import {useLocation} from "react-router-dom";
+import {publicRequest} from "../requestMethods";
 
 const Container = styled.div``;
 
 const Wrapper = styled.div`
   padding: 50px;
   display: flex;
-  ${mobile({ padding: "10px", flexDirection:"column" })}
+  ${mobile({padding: "10px", flexDirection: "column"})}
 `;
 
 const ImageContainer = styled.div`
@@ -22,14 +25,14 @@ const ImageContainer = styled.div`
 const Image = styled.img`
   width: 100%;
   height: 90vh;
-  object-fit: cover;
-  ${mobile({ height: "40vh" })}
+  object-fit: contain;
+  ${mobile({height: "40vh"})}
 `;
 
 const InfoContainer = styled.div`
   flex: 1;
   padding: 0px 50px;
-  ${mobile({ padding: "10px" })}
+  ${mobile({padding: "10px"})}
 `;
 
 const Title = styled.h1`
@@ -50,7 +53,7 @@ const FilterContainer = styled.div`
   margin: 30px 0px;
   display: flex;
   justify-content: space-between;
-  ${mobile({ width: "100%" })}
+  ${mobile({width: "100%"})}
 `;
 
 const Filter = styled.div`
@@ -84,7 +87,7 @@ const AddContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  ${mobile({ width: "100%" })}
+  ${mobile({width: "100%"})}
 `;
 
 const AmountContainer = styled.div`
@@ -110,29 +113,51 @@ const Button = styled.button`
   background-color: white;
   cursor: pointer;
   font-weight: 500;
-  &:hover{
+
+  &:hover {
     background-color: #f8f4f4;
   }
 `;
 
 const Product = () => {
+    const location = useLocation();
+    const id = location.pathname.split('/')[2];
+    const [product, setProduct] = useState({});
+    const [quantity, setQuantity] = useState(1);
+
+    useEffect(async () => {
+        try {
+            const product = await publicRequest.get("/products/find/" + id);
+            setProduct(product.data);
+        } catch (error) {
+
+        }
+    }, [id]);
+
+    const getBorder = (color) => {
+        return color === 'white' ? '1px solid black' : 'none';
+    }
+
+    const handleQuantity = (type) => {
+        if (type === 'dec') {
+            quantity > 1 && setQuantity(quantity - 1);
+        } else {
+            setQuantity(quantity + 1);
+        }
+    }
+
     return (
         <Container>
             <Announcement/>
             <Navbar/>
             <Wrapper>
                 <ImageContainer>
-                    <Image src="https://i.ibb.co/S6qMxwr/jean.jpg"/>
+                    <Image src={product.img}/>
                 </ImageContainer>
                 <InfoContainer>
-                    <Title>Nutrixs cadunt!</Title>
-                    <Description>
-                        Aye there's nothing like the dead malaria singing on the pegleg.
-                        Per guest prepare one container of triple sec with scraped steak for dessert.
-                        With peanut butter drink whipped cream. Arg! Pieces o' fortune are forever fine.
-                        It is a conscious sensor, sir.
-                    </Description>
-                    <Price>42 €</Price>
+                    <Title>{product.title}</Title>
+                    <Description>{product.description}</Description>
+                    <Price>{product.price} €</Price>
                     <FilterContainer>
                         <Filter>
                             <FilterTitle>Color</FilterTitle>
