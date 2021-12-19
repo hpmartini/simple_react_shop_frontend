@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import Announcement from "../components/Announcement";
 import {Add, Remove} from "@material-ui/icons";
 import {mobile} from "../responsive";
+import {useSelector} from "react-redux";
 
 const Container = styled.div``;
 
@@ -41,7 +42,7 @@ const TopTexts = styled.div`
 const TopText = styled.span`
   text-decoration: underline;
   cursor: pointer;
-  margin: 0px 10px;
+  margin: 0 10px;
 `;
 
 const Bottom = styled.div`
@@ -134,7 +135,7 @@ const SummaryTitle = styled.h1`
 `;
 
 const SummaryItem = styled.div`
-  margin: 30px 0px;
+  margin: 30px 0;
   display: flex;
   justify-content: space-between;
   font-weight: ${(props) => props.type === "total" && "500"};
@@ -154,6 +155,8 @@ const Button = styled.button`
 `;
 
 const Cart = () => {
+    const cart = useSelector(({cart}) => cart);
+
     return (
         <Container>
             <Navbar/>
@@ -163,60 +166,45 @@ const Cart = () => {
                 <Top>
                     <TopButton>CONTINUE SHOPPING</TopButton>
                     <TopTexts>
-                        <TopText>Shopping Bag (2)</TopText>
+                        <TopText>Shopping Bag ({cart.quantity})</TopText>
                         <TopText>Your wishlist (0)</TopText>
                     </TopTexts>
                     <TopButton type="filled">CHECKOUT NOW</TopButton>
                 </Top>
                 <Bottom>
-                    <Info>
-                        <Product>
-                            <ProductDetail>
-                                <Image src="https://images.unsplash.com/photo-1546868871-7041f2a55e12"/>
-                                <Details>
-                                    <ProductName><b>Product:</b> SCHWARZUHR</ProductName>
-                                    <ProductId><b>ID:</b> 76854879</ProductId>
-                                    <ProductColor color="black"/>
-                                    <ProductSize><b>Size:</b> 42 €</ProductSize>
-                                </Details>
-                            </ProductDetail>
-                            <PriceDetail>
-                                <ProductAmountContainer>
-                                    <Add/>
-                                    <ProductAmount>2</ProductAmount>
-                                    <Remove/>
-                                </ProductAmountContainer>
-                                <ProductPrice>42 €</ProductPrice>
-                            </PriceDetail>
-                        </Product>
-
-                        <Hr/>
-
-                        <Product>
-                            <ProductDetail>
-                                <Image src="https://images.unsplash.com/photo-1546868871-7041f2a55e12"/>
-                                <Details>
-                                    <ProductName><b>Product:</b> SCHWARZUHR</ProductName>
-                                    <ProductId><b>ID:</b> 76854879</ProductId>
-                                    <ProductColor color="black"/>
-                                    <ProductSize><b>Size:</b> 42 €</ProductSize>
-                                </Details>
-                            </ProductDetail>
-                            <PriceDetail>
-                                <ProductAmountContainer>
-                                    <Add/>
-                                    <ProductAmount>2</ProductAmount>
-                                    <Remove/>
-                                </ProductAmountContainer>
-                                <ProductPrice>42 €</ProductPrice>
-                            </PriceDetail>
-                        </Product>
+                    <Info> {
+                        cart.products.map((product) => (
+                            <>
+                                <Product>
+                                    <ProductDetail>
+                                        <Image src={product.img}/>
+                                        <Details>
+                                            <ProductName>
+                                                <b>Product:</b> {product.title} <br/> {product.description}
+                                            </ProductName>
+                                            <ProductId><b>ID:</b> {product._id}</ProductId>
+                                            <ProductColor color={product.color}/>
+                                            <ProductSize><b>Size:</b> {product.size}</ProductSize>
+                                        </Details>
+                                    </ProductDetail>
+                                    <PriceDetail>
+                                        <ProductAmountContainer>
+                                            <Add/>
+                                            <ProductAmount>{product.quantity}</ProductAmount>
+                                            <Remove/>
+                                        </ProductAmountContainer>
+                                        <ProductPrice>{product.price * product.quantity} €</ProductPrice>
+                                    </PriceDetail>
+                                </Product>
+                                <Hr/>
+                            </>
+                        ))}
                     </Info>
                     <Summary>
                         <SummaryTitle>ORDER SUMMARY</SummaryTitle>
                         <SummaryItem>
                             <SummaryItemText>Subtotal</SummaryItemText>
-                            <SummaryItemPrice>42€</SummaryItemPrice>
+                            <SummaryItemPrice>{cart.total} €</SummaryItemPrice>
                         </SummaryItem>
                         <SummaryItem>
                             <SummaryItemText>Estimated Shipping</SummaryItemText>
@@ -228,7 +216,7 @@ const Cart = () => {
                         </SummaryItem>
                         <SummaryItem type="total">
                             <SummaryItemText>Total</SummaryItemText>
-                            <SummaryItemPrice>84€</SummaryItemPrice>
+                            <SummaryItemPrice>{cart.total} €</SummaryItemPrice>
                         </SummaryItem>
                         <Button>CHECKOUT NOW</Button>
                     </Summary>
