@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useEffect, useState} from 'react';
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -7,7 +8,8 @@ import {Add, Remove} from "@material-ui/icons";
 import {mobile} from "../responsive";
 import {useSelector} from "react-redux";
 import StripeCheckout from "react-stripe-checkout";
-import {useState} from "react";
+import {userRequest} from "../requestMethods";
+import {useNavigate} from "react-router-dom";
 
 require('dotenv').config()
 
@@ -163,10 +165,26 @@ const Button = styled.button`
 const Cart = () => {
     const cart = useSelector(({cart}) => cart);
     const [stripeToken, setStripeToken] = useState(null);
+    const navigate = useNavigate();
 
     const onToken = (token) => {
         setStripeToken(token);
     }
+
+    useEffect(() => {
+        const makeRequest = async () => {
+            try {
+                const res = await userRequest.post('/checkout/payment', {
+                    tokenId: stripeToken.id,
+                    amount: 100,
+                });
+                navigate('/success', {data: res.data})
+            } catch (error) {
+
+            }
+        }
+        stripeToken && makeRequest();
+    }, [stripeToken, cart.total, navigate]);
 
     return (
         <Container>
