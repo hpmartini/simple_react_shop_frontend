@@ -136,13 +136,16 @@ const Product = () => {
     const [size, setSize] = useState('');
     const dispatch = useDispatch();
 
-    useEffect(async () => {
-        try {
-            const product = await publicRequest.get("/products/find/" + id);
-            setProduct(product.data);
-        } catch (error) {
-
-        }
+    useEffect(() => {
+        const findProduct = async () => {
+            try {
+                const product = await publicRequest.get("/products/find/" + id);
+                setProduct(product.data);
+            } catch (error) {
+                console.log('Error searching for product', error);
+            }
+        };
+        findProduct();
     }, [id]);
 
     const getBorder = (color) => {

@@ -11,19 +11,22 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
-const Products = ({cat, filters, sorting}) => {
+const Products = async ({cat, filters, sorting}) => {
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
 
-    useEffect(async () => {
-        try {
-            const response = await axios.get(cat
-                ? `http://localhost:4000/api/products?category=${cat}`
-                : 'http://localhost:4000/api/products');
-            setProducts(response.data);
-        } catch (error) {
-
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await axios.get(cat
+                    ? `http://localhost:4000/api/products?category=${cat}`
+                    : 'http://localhost:4000/api/products');
+                setProducts(response.data);
+            } catch (error) {
+                console.log('Error fetching products', error)
+            }
         }
+        fetchProducts();
     }, [cat]);
 
     useEffect(() => {
