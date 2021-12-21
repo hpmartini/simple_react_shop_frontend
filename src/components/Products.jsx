@@ -11,7 +11,7 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
-const Products = async ({cat, filters, sorting}) => {
+const Products = ({cat, filters, sorting}) => {
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
 
@@ -49,10 +49,7 @@ const Products = async ({cat, filters, sorting}) => {
             setFilteredProducts((products) =>
                 [...products].sort((a, b) => b.price - a.price))
         }
-        console.log(sorting);
-
     }, [sorting]);
-
 
     return (
         <Container>
